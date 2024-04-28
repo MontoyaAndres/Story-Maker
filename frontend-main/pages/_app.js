@@ -26,7 +26,6 @@ export default function MyApp(props) {
         <Box
           sx={{
             display: "flex",
-            backgroundColor: "rgb(249 250 251)",
           }}
         >
           <AppBar
