@@ -1,10 +1,16 @@
 import os
+import logging
 from llama_index.core.settings import Settings
 from llama_index.core.agent import AgentRunner
 from llama_index.core.tools.query_engine import QueryEngineTool
+from llama_index.core import set_global_handler
 from app.engine.tools import ToolFactory
 from app.engine.index import get_index
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+
+set_global_handler("simple")
 
 def get_chat_engine():
     system_prompt = os.getenv("SYSTEM_PROMPT")
@@ -14,12 +20,12 @@ def get_chat_engine():
     # Add query tool if index exists
     index = get_index()
     if index is not None:
-        query_engine = index.as_query_engine(similarity_top_k=int(top_k))
+        query_engine = index.as_query_engine(similarity_top_k=int(top_k)) 
         query_engine_tool = QueryEngineTool.from_defaults(query_engine=query_engine)
         tools.append(query_engine_tool)
 
     # Add additional tools
-    tools += ToolFactory.from_env()
+    #tools += ToolFactory.from_env()
 
     return AgentRunner.from_llm(
         llm=Settings.llm,

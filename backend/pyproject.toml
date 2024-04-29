@@ -1,8 +1,9 @@
+[tool]
 [tool.poetry]
 name = "app"
 version = "0.1.0"
 description = ""
-authors = ["Marcus Schiesser <mail@marcusschiesser.de>"]
+authors = [ "Marcus Schiesser <mail@marcusschiesser.de>" ]
 readme = "README.md"
 
 [tool.poetry.scripts]
@@ -11,11 +12,30 @@ generate = "app.engine.generate:generate_datasource"
 [tool.poetry.dependencies]
 python = "^3.11,<3.12"
 fastapi = "^0.109.1"
-uvicorn = { extras = ["standard"], version = "^0.23.2" }
 python-dotenv = "^1.0.0"
 llama-index = "0.10.28"
 llama-index-core = "0.10.28"
+python-multipart = "^0.0.9"
+llama-index-llms-ollama = "^0.1.2"
+llama-index-embeddings-ollama = "^0.1.2"
+trulens-eval = "^0.28.2"
+
+[tool.poetry.dependencies.uvicorn]
+extras = [ "standard" ]
+version = "^0.23.2"
+
+[tool.poetry.dependencies.llama-index-vector-stores-mongodb]
+version = "^0.1.3"
+
+[tool.poetry.dependencies.docx2txt]
+version = "^0.8"
+
+[tool.poetry.dependencies.llama-index-tools-google]
+version = "0.1.2"
+
+[tool.poetry.dependencies.llama-index-agent-openai]
+version = "0.2.2"
 
 [build-system]
-requires = ["poetry-core"]
+requires = [ "poetry-core" ]
 build-backend = "poetry.core.masonry.api"
