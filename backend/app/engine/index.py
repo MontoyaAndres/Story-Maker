@@ -1,20 +1,20 @@
 import logging
 import os
 
-from app.engine.constants import STORAGE_DIR
-from llama_index.core.storage import StorageContext
-from llama_index.core.indices import load_index_from_storage
+from llama_index.core.indices import VectorStoreIndex
+from llama_index.vector_stores.mongodb import MongoDBAtlasVectorSearch
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("uvicorn")
 
 
 def get_index():
-    # check if storage already exists
-    if not os.path.exists(STORAGE_DIR):
-        return None
-    # load the existing index
-    logger.info(f"Loading index from {STORAGE_DIR}...")
-    storage_context = StorageContext.from_defaults(persist_dir=STORAGE_DIR)
-    index = load_index_from_storage(storage_context)
-    logger.info(f"Finished loading index from {STORAGE_DIR}")
+    logger.info("Connecting to index from MongoDB...")
+    store = MongoDBAtlasVectorSearch(
+        db_name=os.environ["MONGODB_DATABASE"],
+        collection_name=os.environ["MONGODB_VECTORS"],
+        index_name=os.environ["MONGODB_VECTOR_INDEX"],
+    )
+    index = VectorStoreIndex.from_vector_store(store)
+    logger.info("Finished connecting to index from MongoDB.")
     return index

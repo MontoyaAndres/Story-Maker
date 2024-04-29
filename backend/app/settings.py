@@ -27,7 +27,7 @@ def init_openai():
     from llama_index.llms.openai import OpenAI
     from llama_index.embeddings.openai import OpenAIEmbedding
     from llama_index.core.constants import DEFAULT_TEMPERATURE
-
+    
     max_tokens = os.getenv("LLM_MAX_TOKENS")
     config = {
         "model": os.getenv("MODEL"),
