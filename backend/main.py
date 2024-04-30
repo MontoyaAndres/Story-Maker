@@ -47,11 +47,29 @@ def read_root():
      return {"status": "ok"}
 
 @app.post("/upload")
-def upload(files: List[UploadFile] = File(...)):
+def upload(email: str, file: UploadFile = File(...)):
+    try:
+        data_dir = 'data/'+email.replace('@','_at_')
+        os.makedirs(data_dir, exist_ok=True)
+        contents = file.file.read()
+        with open(data_dir+'/'+file.filename, 'wb') as f:
+            f.write(contents)
+    except Exception as error:
+        logger.info("An error occurred:", error)
+        return {"message": f"There was an error uploading the file: {type(error).__name__}"}
+    finally:
+        file.file.close()   
+
+    return {"message": f"Successfully uploaded {file.filename}"}
+
+@app.post("/upload-multiple")
+def upload(email: str, files: List[UploadFile] = File(...)):
     for file in files:
         try:
+            data_dir = 'data/'+email.replace('@','_at_')
+            os.makedirs(data_dir, exist_ok=True)
             contents = file.file.read()
-            with open('data/'+file.filename, 'wb') as f:
+            with open(data_dir+'/'+file.filename, 'wb') as f:
                 f.write(contents)
         except Exception:
             return {"message": "There was an error uploading the file(s)"}
