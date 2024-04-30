@@ -1,6 +1,16 @@
 import { useState } from "react";
 
-import { TextField, Typography, Button, Snackbar, Alert } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  Button,
+  Snackbar,
+  Alert,
+  Select,
+  MenuItem,
+  InputLabel,
+  Slider,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -14,7 +24,13 @@ import { VisuallyHiddenInput, Wrapper } from "../styles";
 const Home = () => {
   const [values, setValues] = useState({
     description: "",
+    creativity: 100,
     email: "",
+    details: "",
+    size: "Happy",
+    atmosphere: "Happy",
+    genre: "Happy",
+    perspective: "Happy",
   });
   const [files, setFiles] = useState(null);
   const [status, setStatus] = useState("idle");
@@ -27,9 +43,9 @@ const Home = () => {
     setFiles(Array.from(files));
   };
 
-  const handleValues = (e) => {
+  const handleValues = (e, customName) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setValues({ ...values, [name || customName]: value });
   };
 
   const handleOpenDialog = (value) => {
@@ -141,6 +157,95 @@ const Home = () => {
             value={values.description}
             onChange={handleValues}
           />
+          <div className="two">
+            <div className="select">
+              <InputLabel id="size-label">Story size</InputLabel>
+              <Select
+                labelId="size-label"
+                id="size"
+                value={values.size}
+                fullWidth
+                label="Story size"
+                variant="standard"
+                onChange={(e) => handleValues(e, "size")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Happy"}>Happy</MenuItem>
+                <MenuItem value={"Adventure"}>Adventure</MenuItem>
+                <MenuItem value={"Action"}>Action</MenuItem>
+              </Select>
+            </div>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="details"
+              name="details"
+              label="Character details"
+              fullWidth
+              multiline
+              variant="standard"
+              value={values.details}
+              onChange={handleValues}
+            />
+          </div>
+          <div className="two">
+            <div className="select">
+              <InputLabel id="atmosphere-label">
+                Setting and atmosphere
+              </InputLabel>
+              <Select
+                labelId="atmosphere-label"
+                id="atmosphere"
+                value={values.atmosphere}
+                fullWidth
+                label="Setting and atmosphere"
+                variant="standard"
+                onChange={(e) => handleValues(e, "atmosphere")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Happy"}>Happy</MenuItem>
+                <MenuItem value={"Adventure"}>Adventure</MenuItem>
+                <MenuItem value={"Action"}>Action</MenuItem>
+              </Select>
+            </div>
+            <div className="select">
+              <InputLabel id="genre-label">Genre</InputLabel>
+              <Select
+                labelId="genre-label"
+                id="genre"
+                value={values.genre}
+                fullWidth
+                label="Genre"
+                variant="standard"
+                onChange={(e) => handleValues(e, "genre")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Happy"}>Happy</MenuItem>
+                <MenuItem value={"Adventure"}>Adventure</MenuItem>
+                <MenuItem value={"Action"}>Action</MenuItem>
+              </Select>
+            </div>
+          </div>
+          <div className="two">
+            <div className="slider">
+              <Typography gutterBottom>Creativity</Typography>
+              <Slider
+                defaultValue={100}
+                valueLabelDisplay="auto"
+                name="creativity"
+                value={values.creativity}
+                onChange={(e) => handleValues(e, "creativity")}
+              />
+            </div>
+            <div className="slider" />
+          </div>
           <div className="upload">
             <label htmlFor="upload" style={{ marginTop: 10 }}>
               Upload any file

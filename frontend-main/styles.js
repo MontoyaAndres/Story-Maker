@@ -46,6 +46,18 @@ export const Wrapper = styled.div`
         margin-right: 10px;
       }
     }
+
+    .two {
+      display: flex;
+      justify-content: space-between;
+      grid-gap: 20px;
+      margin-top: 20px;
+
+      .select,
+      .slider {
+        width: 100%;
+      }
+    }
   }
 `;
 
