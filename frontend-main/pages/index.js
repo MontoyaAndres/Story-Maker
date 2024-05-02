@@ -167,7 +167,7 @@ const Home = () => {
 
       const response = await fetch(
         `https://story-maker.fly.dev/download?email=${values.downloadEmail}`
-      ).then((res) => res.json());
+      ).then((res) => res.text());
 
       const fileName = "downloaded_text.md";
       const element = document.createElement("a");
