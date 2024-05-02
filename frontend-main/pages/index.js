@@ -59,12 +59,89 @@ const Home = () => {
   const handleGenerate = async () => {
     try {
       setStatus("pending");
+      setStory(null);
 
-      console.log(values, files);
+      if (!values.email) {
+        throw new Error("Email is required");
+      }
 
-      // Call the API to generate the story
-      // Then set the story to the state
-      setStory("This is a story");
+      if (!files) {
+        throw new Error("Upload a file");
+      }
+
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const [uploadFile, apiChat] = await Promise.all([
+        fetch(
+          `https://story-maker.fly.dev/upload-multiple?email=${values.email}`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        ).then((res) => res.json()),
+        fetch("https://story-maker.fly.dev/api/chat/request", {
+          method: "POST",
+          body: JSON.stringify({
+            email: values.email,
+            messages: [
+              {
+                content: `You are a Book writer and publisher especialized on Amazon KDP. Always answer the query using the provided context information, and prior knowledge only if needed.  Some rules to follow:  1. Use the 'amazon_book_data' tool to find the best Amazon keywords to use on the title and description of the book  2. Never directly reference the given context in your answer.  3. Avoid statements like 'Based on the context, ...' or 'The context information ...' or anything along those lines.   Given the context information and prior knowledge only if needed, please write a Book proposal in markdown format, and save it as a note for email '${
+                  values.email
+                }' using the 'note_saver' tool, and finally return only the following JSON format: '{title, description, keywords, chapters_outline: [{chapter_number, chapter_title, chapter_description}]}', with the following input parameters: ${JSON.stringify(
+                  values
+                )}`,
+                role: "user",
+              },
+            ],
+          }),
+        }).then((res) => res.json()),
+      ]);
+
+      // CAMBIAR ESTO CON LA RESPUESTA VERDADERA DE LA API
+      if (uploadFile?.message && apiChat) {
+        setStory({
+          title: "Shadows of Love and War",
+          description:
+            "Step into the haunting streets of Paris during World War II, where love and horror intertwine in a gripping tale of passion and fear. Follow the lives of two star-crossed lovers as they navigate the darkness of war and the shadows of their own desires.",
+          keywords:
+            "Romance, horror, Paris, World War II, love, fear, passion, star-crossed lovers",
+          chapters_outline: [
+            {
+              chapter_number: 1,
+              chapter_title: "The City of Shadows",
+              chapter_description:
+                "Introduction to war-torn Paris, setting the eerie atmosphere for the unfolding tale.",
+            },
+            {
+              chapter_number: 2,
+              chapter_title: "Forbidden Love",
+              chapter_description:
+                "The protagonists' first encounter, sparking a forbidden romance amidst the chaos of war.",
+            },
+            {
+              chapter_number: 3,
+              chapter_title: "Whispers in the Dark",
+              chapter_description:
+                "Mysterious occurrences and supernatural elements heighten the tension in their relationship.",
+            },
+            {
+              chapter_number: 4,
+              chapter_title: "Echoes of the Past",
+              chapter_description:
+                "Revelations from the past threaten to tear apart their love as they confront their deepest fears.",
+            },
+            {
+              chapter_number: 5,
+              chapter_title: "Embrace of Shadows",
+              chapter_description:
+                "The climax of their love story unfolds in the shadows of Paris, testing their bond in the face of impending doom.",
+            },
+          ],
+        });
+      }
 
       setStatus("resolved");
     } catch (error) {
@@ -75,10 +152,37 @@ const Home = () => {
 
   const handleSave = async () => {
     try {
-      // Call the API to save the story
-      // Then show a success message
-      setEmailSent(true);
-      handleOpenDialog(false);
+      if (!values.email) {
+        throw new Error("Email is required");
+      }
+
+      if (!story) {
+        throw new Error("Generate a story first");
+      }
+
+      const response = await fetch(
+        "https://story-maker.fly.dev/api/chat/request-2",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: values.email,
+            messages: [
+              {
+                content: `You are a Book writer and publisher especialized on Amazon KDP. Don't describe the chapter, instead use all of your knowledge to find the best inspiration and write the actual content of each chapter of the book, please loop trough all the chapters and write each full chapter with at least 500 words per chapter in markdown format, and save it as a note for email '${
+                  values.email
+                }' using the 'note_saver' tool, with the following input parameters: ${JSON.stringify(
+                  values
+                )} ${JSON.stringify(story)}`,
+                role: "user",
+              },
+            ],
+          }),
+        }
+      ).then((res) => res.json());
+
+      if (response?.message) {
+        setEmailSent(true);
+      }
     } catch (error) {
       console.error(error);
       setEmailSent(false);
@@ -213,6 +317,21 @@ const Home = () => {
                 <MenuItem value={"Action"}>Action</MenuItem>
               </Select>
             </div>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="email"
+              name="email"
+              label="Email"
+              fullWidth
+              multiline
+              variant="standard"
+              value={values.email}
+              onChange={handleValues}
+            />
+          </div>
+          <div className="two">
             <div className="select">
               <InputLabel id="genre-label">Genre</InputLabel>
               <Select
@@ -232,8 +351,6 @@ const Home = () => {
                 <MenuItem value={"Action"}>Action</MenuItem>
               </Select>
             </div>
-          </div>
-          <div className="two">
             <div className="slider">
               <Typography gutterBottom>Creativity</Typography>
               <Slider
@@ -244,7 +361,6 @@ const Home = () => {
                 onChange={(e) => handleValues(e, "creativity")}
               />
             </div>
-            <div className="slider" />
           </div>
           <div className="upload">
             <label htmlFor="upload" style={{ marginTop: 10 }}>
@@ -286,14 +402,28 @@ const Home = () => {
           {status === "resolved" && (
             <>
               <Typography variant="body1" style={{ marginTop: 20 }}>
-                {story}
+                {story?.title}
               </Typography>
+              <Typography variant="body1" style={{ marginTop: 20 }}>
+                {story?.description}
+              </Typography>
+              <Typography variant="body1" style={{ marginTop: 20 }}>
+                {story?.keywords}
+              </Typography>
+              {story?.chapters_outline.map((chapter) => (
+                <div key={chapter.chapter_number}>
+                  <Typography variant="body1" style={{ marginTop: 20 }}>
+                    {chapter.chapter_title}:
+                  </Typography>
+                  {chapter.chapter_description}
+                </div>
+              ))}
               <div className="buttons">
                 <Button
                   variant="contained"
                   color="primary"
                   style={{ width: 200 }}
-                  onClick={() => handleOpenDialog(true)}
+                  onClick={handleSave}
                 >
                   Save
                 </Button>
@@ -301,6 +431,7 @@ const Home = () => {
                   variant="outlined"
                   color="primary"
                   style={{ width: 200 }}
+                  onClick={handleGenerate}
                 >
                   Re-generate
                 </Button>
