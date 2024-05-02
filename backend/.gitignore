@@ -4,3 +4,4 @@ storage
 .streamlit
 default.sqlite
 fly.tmoml
+data

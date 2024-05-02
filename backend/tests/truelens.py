@@ -112,13 +112,13 @@ def run_trulens():
     logger.info("Creating TruLlama recorders")
     
     groundedness_recorder = TruLlama(query_engine,
-        app_id='LlamaIndex_App1',
+        app_id='Story-Maker',
         feedbacks=[f_groundedness])
     qa_relevance_recorder = TruLlama(query_engine,
-        app_id='LlamaIndex_App1',
+        app_id='Story-Maker',
         feedbacks=[f_qa_relevance])
     qs_relevance_recorder = TruLlama(query_engine,
-        app_id='LlamaIndex_App1',
+        app_id='Story-Maker',
         feedbacks=[f_qs_relevance])
     
     logger.info("Creating test set")
@@ -127,8 +127,8 @@ def run_trulens():
     # test_set = test.generate_test_set(test_breadth = 1, test_depth = 1)
 
     test_set = [
-        "What are give the paper label guidelines",
-        "what is the maximum weight and size for parcels?"
+        "What are the top 3 keywords to publish fiction books in Amazon?",
+        "What should be the words lenght of fiction and non-fiction books in Amazon?"
     ]
     
     logger.info("Running test set queries")

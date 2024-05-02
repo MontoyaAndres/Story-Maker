@@ -12,6 +12,7 @@ from app.api.routers.chat import chat_router
 from app.settings import init_settings
 from app.observability import init_observability
 from fastapi import File, UploadFile
+from fastapi.responses import FileResponse
 from typing import List
 
 app = FastAPI()
@@ -77,6 +78,11 @@ def upload(email: str, files: List[UploadFile] = File(...)):
             file.file.close()
 
     return {"message": f"Successfuly uploaded {[file.filename for file in files]}"}    
+
+@app.get("/download")
+async def download(email: str):
+    note_file = os.path.join("data", email.replace('@','_at_'), "notes.md")
+    return FileResponse(note_file)
 
 if __name__ == "__main__":
     app_host = os.getenv("APP_HOST", "0.0.0.0")
