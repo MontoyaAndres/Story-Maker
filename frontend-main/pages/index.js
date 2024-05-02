@@ -84,6 +84,9 @@ const Home = () => {
         "https://story-maker.fly.dev/api/chat/request",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             email: values.email,
             messages: [
@@ -164,6 +167,9 @@ const Home = () => {
         "https://story-maker.fly.dev/api/chat/request-2",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             email: values.email,
             messages: [
