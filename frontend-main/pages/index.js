@@ -72,7 +72,7 @@ const Home = () => {
           formData.append("files", file);
         });
         await fetch(
-          `http://localhost:8080/upload-multiple?email=${values.email}`,
+          `https://story-maker.fly.dev/upload-multiple?email=${values.email}`,
           {
             method: "POST",
             body: formData,
@@ -81,7 +81,7 @@ const Home = () => {
       }
 
       const apiChat = await fetch(
-        "http://localhost:8080/api/chat/request",
+        "https://story-maker.fly.dev/api/chat/request",
         {
           method: "POST",
           headers: {
@@ -103,9 +103,8 @@ const Home = () => {
         }
       ).then((res) => res.json());
 
-      // CAMBIAR ESTO CON LA RESPUESTA VERDADERA DE LA API
       if (apiChat && apiChat.result?.content) {
-        console.log('apiChat:', apiChat)
+        console.log("apiChat:", apiChat);
         setStory(JSON.parse(apiChat.result.content));
       }
 
@@ -127,7 +126,7 @@ const Home = () => {
       }
 
       const response = await fetch(
-        "http://localhost:8080/api/chat/request-2",
+        "https://story-maker.fly.dev/api/chat/request-2",
         {
           method: "POST",
           headers: {
@@ -167,10 +166,21 @@ const Home = () => {
       }
 
       const response = await fetch(
-        `http://localhost:8080/download?email=${values.downloadEmail}`
+        `https://story-maker.fly.dev/download?email=${values.downloadEmail}`
       ).then((res) => res.json());
 
-      console.log(response);
+      const fileName = "downloaded_text.md";
+      const element = document.createElement("a");
+
+      element.setAttribute(
+        "href",
+        "data:text/markdown;charset=utf-8," + encodeURIComponent(response)
+      );
+      element.setAttribute("download", fileName);
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     } catch (error) {
       console.error(error);
       setStatus("rejected");
