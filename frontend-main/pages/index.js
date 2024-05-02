@@ -150,6 +150,7 @@ const Home = () => {
 
       if (response?.message) {
         setEmailSent(true);
+        setStatus("resolved");
       }
     } catch (error) {
       console.error(error);
@@ -181,6 +182,7 @@ const Home = () => {
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
+      setStatus("resolved");
     } catch (error) {
       console.error(error);
       setStatus("rejected");
