@@ -66,24 +66,23 @@ const Home = () => {
         throw new Error("Email is required");
       }
 
-      if (!files) {
-        throw new Error("Upload a file");
-      }
-
-      const formData = new FormData();
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
-
-      const [uploadFile, apiChat] = await Promise.all([
-        fetch(
+      if (files) {
+        const formData = new FormData();
+        files.forEach((file) => {
+          formData.append("files", file);
+        });
+        await fetch(
           `https://story-maker.fly.dev/upload-multiple?email=${values.email}`,
           {
             method: "POST",
             body: formData,
           }
-        ).then((res) => res.json()),
-        fetch("https://story-maker.fly.dev/api/chat/request", {
+        );
+      }
+
+      const apiChat = await fetch(
+        "https://story-maker.fly.dev/api/chat/request",
+        {
           method: "POST",
           body: JSON.stringify({
             email: values.email,
@@ -98,8 +97,8 @@ const Home = () => {
               },
             ],
           }),
-        }).then((res) => res.json()),
-      ]);
+        }
+      ).then((res) => res.json());
 
       // CAMBIAR ESTO CON LA RESPUESTA VERDADERA DE LA API
       if (uploadFile?.message && apiChat) {
