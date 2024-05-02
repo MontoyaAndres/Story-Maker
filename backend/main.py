@@ -50,7 +50,7 @@ def read_root():
 @app.post("/upload")
 def upload(email: str, file: UploadFile = File(...)):
     try:
-        data_dir = 'data/'+email.replace('@','_at_')
+        data_dir = '/data/'+email.replace('@','_at_')
         os.makedirs(data_dir, exist_ok=True)
         contents = file.file.read()
         with open(data_dir+'/'+file.filename, 'wb') as f:
@@ -67,7 +67,7 @@ def upload(email: str, file: UploadFile = File(...)):
 def upload(email: str, files: List[UploadFile] = File(...)):
     for file in files:
         try:
-            data_dir = 'data/'+email.replace('@','_at_')
+            data_dir = '/data/'+email.replace('@','_at_')
             os.makedirs(data_dir, exist_ok=True)
             contents = file.file.read()
             with open(data_dir+'/'+file.filename, 'wb') as f:
@@ -81,7 +81,7 @@ def upload(email: str, files: List[UploadFile] = File(...)):
 
 @app.get("/download")
 async def download(email: str):
-    note_file = os.path.join("data", email.replace('@','_at_'), "notes.md")
+    note_file = os.path.join("/data", email.replace('@','_at_'), "notes.md")
     logger.info(f"Downloading file {note_file}")
     return FileResponse(note_file)
 

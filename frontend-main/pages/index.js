@@ -27,11 +27,11 @@ const Home = () => {
     creativity: 100,
     email: "",
     downloadEmail: "",
-    details: "",
-    size: "Happy",
-    atmosphere: "Happy",
-    genre: "Happy",
-    perspective: "Happy",
+    characters: "",
+    size: "Short (1500 - 3000 words)",
+    atmosphere: "",
+    genre: "Non-Fiction",
+    perspective: "Third Person",
   });
   const [files, setFiles] = useState(null);
   const [status, setStatus] = useState("idle");
@@ -255,6 +255,7 @@ const Home = () => {
             id="description"
             name="description"
             label="Description"
+            placeholder="Example: Love story with two women and one man."
             fullWidth
             multiline
             variant="standard"
@@ -276,47 +277,41 @@ const Home = () => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Happy"}>Happy</MenuItem>
-                <MenuItem value={"Adventure"}>Adventure</MenuItem>
-                <MenuItem value={"Action"}>Action</MenuItem>
+                <MenuItem value={"Short (1500 - 3000 words)"}>Short (1500 - 3000 words)</MenuItem>
+                <MenuItem value={"Medium (4000 - 6000 words)"}>Medium (4000 - 6000 words)</MenuItem>
+                <MenuItem value={"Long (7000 - 9000 words)"}>Long (7000 - 9000 words)</MenuItem>
               </Select>
             </div>
             <TextField
               autoFocus
               required
               margin="dense"
-              id="details"
-              name="details"
-              label="Character details"
+              id="characters"
+              name="characters"
+              label="Characters"
+              placeholder="Enter character details (e.g., John, a quirky inventor, and Mary, a mysterious detective.)"
               fullWidth
               multiline
               variant="standard"
-              value={values.details}
+              value={values.characters}
               onChange={handleValues}
             />
           </div>
           <div className="two">
-            <div className="select">
-              <InputLabel id="atmosphere-label">
-                Setting and atmosphere
-              </InputLabel>
-              <Select
-                labelId="atmosphere-label"
-                id="atmosphere"
-                value={values.atmosphere}
-                fullWidth
-                label="Setting and atmosphere"
-                variant="standard"
-                onChange={(e) => handleValues(e, "atmosphere")}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"Happy"}>Happy</MenuItem>
-                <MenuItem value={"Adventure"}>Adventure</MenuItem>
-                <MenuItem value={"Action"}>Action</MenuItem>
-              </Select>
-            </div>
+          <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="atmosphere"
+              name="atmosphere"
+              label="atmosphere"
+              placeholder="Enter setting and atmosphere (e.g., A medieval kingdom with a mystical aura, surrounded by dense forests and ancient ruins.)"
+              fullWidth
+              multiline
+              variant="standard"
+              value={values.atmosphere}
+              onChange={handleValues}
+            />
             <TextField
               autoFocus
               required
@@ -346,9 +341,49 @@ const Home = () => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Happy"}>Happy</MenuItem>
+                <MenuItem value={"Science Fiction"}>Science Fiction</MenuItem>
+                <MenuItem value={"Romance"}>Romance</MenuItem>
+                <MenuItem value={"Mystery"}>Mystery</MenuItem>
+                <MenuItem value={"Fantasy"}>Fantasy</MenuItem>
+                <MenuItem value={"Thriller"}>Thriller</MenuItem>
+                <MenuItem value={"Historical"}>Historical</MenuItem>
                 <MenuItem value={"Adventure"}>Adventure</MenuItem>
+                <MenuItem value={"Horror"}>Horror</MenuItem>
+                <MenuItem value={"Comedy"}>Comedy</MenuItem>
                 <MenuItem value={"Action"}>Action</MenuItem>
+                <MenuItem value={"Western"}>Western</MenuItem>
+                <MenuItem value={"Documentary"}>Documentary</MenuItem>
+                <MenuItem value={"Fiction"}>Fiction</MenuItem>
+                <MenuItem value={"Non-Fiction"}>Non-Fiction</MenuItem>
+                <MenuItem value={"Biography"}>Biography</MenuItem>
+                <MenuItem value={"Self-Help"}>Self-Help</MenuItem>
+
+              </Select>
+            </div>
+            <div className="select">
+              <InputLabel id="perspective-label">Perspective</InputLabel>
+              <Select
+                labelId="perspective-label"
+                id="perspective"
+                value={values.perspective}
+                fullWidth
+                label="Perspective"
+                variant="standard"
+                onChange={(e) => handleValues(e, "perspective")}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={"First Person"}>First Person</MenuItem>
+                <MenuItem value={"Third Person"}>Third Person</MenuItem>
+                <MenuItem value={"Omniscient"}>Omniscient</MenuItem>
+                <MenuItem value={"Second Person"}>Second Person</MenuItem>
+                <MenuItem value={"Stream of Consciousness"}>Stream of Consciousness</MenuItem>
+                <MenuItem value={"Epistolary"}>Epistolary</MenuItem>
+                <MenuItem value={"Multiple Perspectives"}>Multiple Perspectives</MenuItem>
+                <MenuItem value={"Interactive"}>Interactive</MenuItem>
+                <MenuItem value={"Observer"}>Observer</MenuItem>
+                <MenuItem value={"Camera Eye"}>Camera Eye</MenuItem>
               </Select>
             </div>
             <div className="slider">

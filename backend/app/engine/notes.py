@@ -3,7 +3,7 @@ import os
 
 
 def save_note(note: str, email: str):
-    note_file = os.path.join("data", email.replace('@','_at_'), "notes.md")
+    note_file = os.path.join("/data", email.replace('@','_at_'), "notes.md")
     if not os.path.exists(note_file):
         open(note_file, "w")
 
