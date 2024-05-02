@@ -82,6 +82,7 @@ def upload(email: str, files: List[UploadFile] = File(...)):
 @app.get("/download")
 async def download(email: str):
     note_file = os.path.join("data", email.replace('@','_at_'), "notes.md")
+    logger.info(f"Downloading file {note_file}")
     return FileResponse(note_file)
 
 if __name__ == "__main__":
