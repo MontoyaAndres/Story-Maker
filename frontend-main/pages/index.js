@@ -26,6 +26,7 @@ const Home = () => {
     description: "",
     creativity: 100,
     email: "",
+    downloadEmail: "",
     details: "",
     size: "Happy",
     atmosphere: "Happy",
@@ -186,6 +187,25 @@ const Home = () => {
     } catch (error) {
       console.error(error);
       setEmailSent(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      setStatus("pending_download");
+
+      if (!values.downloadEmail) {
+        throw new Error("Email is required");
+      }
+
+      const response = await fetch(
+        `https://story-maker.fly.dev/api/download?email=${values.downloadEmail}`
+      ).then((res) => res.json());
+
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+      setStatus("rejected");
     }
   };
 
@@ -438,6 +458,44 @@ const Home = () => {
               </div>
             </>
           )}
+        </div>
+      </Wrapper>
+      <Wrapper>
+        <div className="titles">
+          <Typography variant="h4" className="title">
+            Download your document
+          </Typography>
+          <Typography variant="h6" className="description">
+            Download your story here! Enter your email to get it
+          </Typography>
+        </div>
+        <div className="container">
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="downloadEmail"
+            name="downloadEmail"
+            label="Email"
+            fullWidth
+            multiline
+            variant="standard"
+            value={values.downloadEmail}
+            onChange={handleValues}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginTop: 20, width: 200 }}
+            onClick={handleDownload}
+            disabled={status === "pending_download"}
+          >
+            {status === "pending_download" ? (
+              <CircularProgress size={24} />
+            ) : (
+              "Download Story"
+            )}
+          </Button>
         </div>
       </Wrapper>
     </>
