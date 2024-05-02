@@ -3,3 +3,5 @@ storage
 .env
 .streamlit
 default.sqlite
+fly.tmoml
+data

@@ -19,6 +19,8 @@ python-multipart = "^0.0.9"
 llama-index-llms-ollama = "^0.1.2"
 llama-index-embeddings-ollama = "^0.1.2"
 trulens-eval = "^0.28.2"
+datasets = "^2.19.0"
+pandas = "^2.2.2"
 
 [tool.poetry.dependencies.uvicorn]
 extras = [ "standard" ]

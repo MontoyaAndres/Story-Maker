@@ -1,0 +1,8 @@
+# flyctl launch added from .gitignore
+**/__pycache__
+**/storage
+**/.env
+**/.streamlit
+**/default.sqlite
+fly.toml
+data/**

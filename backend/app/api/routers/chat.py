@@ -19,15 +19,17 @@ class _Message(BaseModel):
 
 
 class _ChatData(BaseModel):
+    email: str
     messages: List[_Message]
 
     class Config:
         json_schema_extra = {
             "example": {
+                "email": "user@example.com",
                 "messages": [
                     {
                         "role": "user",
-                        "content": "What standards for letters exist?",
+                        "content": "A Romance horror novel set in Paris on WWII",
                     }
                 ]
             }
@@ -87,9 +89,9 @@ async def parse_chat_data(data: _ChatData) -> Tuple[str, List[ChatMessage]]:
 @r.post("")
 async def chat(
     request: Request,
-    data: _ChatData,
-    chat_engine: BaseChatEngine = Depends(get_chat_engine),
+    data: _ChatData
 ):
+    chat_engine: BaseChatEngine = get_chat_engine(data.email)
     last_message_content, messages = await parse_chat_data(data)
 
     response = await chat_engine.astream_chat(last_message_content, messages)
@@ -121,9 +123,22 @@ async def chat(
 # non-streaming endpoint - delete if not needed
 @r.post("/request")
 async def chat_request(
-    data: _ChatData,
-    chat_engine: BaseChatEngine = Depends(get_chat_engine),
+    data: _ChatData    
 ) -> _Result:
+    chat_engine: BaseChatEngine = get_chat_engine(data.email)
+    last_message_content, messages = await parse_chat_data(data)
+
+    response = await chat_engine.achat(last_message_content, messages)
+    return _Result(
+        result=_Message(role=MessageRole.ASSISTANT, content=response.response),
+        nodes=_SourceNodes.from_source_nodes(response.source_nodes),
+    )
+
+@r.post("/request-2")
+async def chat_request(
+    data: _ChatData    
+) -> _Result:
+    chat_engine: BaseChatEngine = get_chat_engine(data.email)
     last_message_content, messages = await parse_chat_data(data)
 
     response = await chat_engine.achat(last_message_content, messages)
