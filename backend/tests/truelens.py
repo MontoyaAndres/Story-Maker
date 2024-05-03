@@ -109,44 +109,28 @@ def run_trulens():
         .aggregate(np.mean)
     )
 
-    logger.info("Creating TruLlama recorders")
+    logger.info("Creating TruLlama recorder")
     
-    groundedness_recorder = TruLlama(query_engine,
+    query_recorder = TruLlama(query_engine,
         app_id='Story-Maker',
-        feedbacks=[f_groundedness])
-    qa_relevance_recorder = TruLlama(query_engine,
-        app_id='Story-Maker',
-        feedbacks=[f_qa_relevance])
-    qs_relevance_recorder = TruLlama(query_engine,
-        app_id='Story-Maker',
-        feedbacks=[f_qs_relevance])
+        feedbacks=[f_qa_relevance, f_groundedness,f_qs_relevance])
     
     logger.info("Creating test set")
-    #test = GenerateTestSet(app_callable = query_engine.query)
+    test = GenerateTestSet(app_callable = query_engine.query)
     # Generate the test set of a specified breadth and depth without examples automatically
-    # test_set = test.generate_test_set(test_breadth = 1, test_depth = 1)
-
+    test_set = test.generate_test_set(test_breadth = 3, test_depth = 3)
+    '''
     test_set = [
         "What are the top 3 keywords to publish fiction books in Amazon?",
         "What should be the words lenght of fiction and non-fiction books in Amazon?"
     ]
-    
+    '''
     logger.info("Running test set queries")
-    with groundedness_recorder as recording:
+    
+    with query_recorder as recording:
         for test_prompt in test_set:
                 response = query_engine.query(test_prompt)
-                logger.info("Waiting 1 min for OpenAI ratelimits")
-                sleep(61)
-    with qa_relevance_recorder as recording:
-        for test_prompt in test_set:
-                response = query_engine.query(test_prompt)
-                logger.info("Waiting 1 min for OpenAI ratelimits")
-                sleep(61)            
-    with qs_relevance_recorder as recording:
-        for test_prompt in test_set:
-                response = query_engine.query(test_prompt)
-                logger.info("Waiting 1 min for OpenAI ratelimits")
-                sleep(61)
+    
 
 if __name__ == "__main__":
     tru = Tru()

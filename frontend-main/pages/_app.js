@@ -9,7 +9,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import HomeIcon from "@mui/icons-material/Home";
-import FlagIcon from "@mui/icons-material/Flag";
+import GithubIcon from "@mui/icons-material/GitHub";
 
 import theme from "../theme";
 
@@ -62,13 +62,14 @@ export default function MyApp(props) {
                 noWrap
                 style={{ display: "flex", alignItems: "center" }}
               >
-                <FlagIcon />
+                <GithubIcon />
                 <span style={{ marginLeft: 8 }}>
                   <a
-                    href="#generated"
+                    href="https://github.com/MontoyaAndres/Story-Maker"
+                    target="_blank"
                     style={{ color: "#ffff", textDecoration: "none" }}
                   >
-                    Stories generated
+                    Github
                   </a>
                 </span>
               </Typography>

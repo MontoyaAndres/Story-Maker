@@ -227,6 +227,7 @@ const Home = () => {
             name="email"
             label="email"
             type="email"
+            placeholder="user@example.com"
             value={values.email}
             onChange={handleValues}
             fullWidth
@@ -243,8 +244,11 @@ const Home = () => {
           <Typography variant="h4" className="title">
             Welcome to Story-Maker
           </Typography>
-          <Typography variant="h6" className="description">
-            Generate a story by clicking the button below
+          <Typography variant="h5" className="description">
+            Write Smarter, Publish Faster!
+          </Typography>
+          <Typography className="description">
+            AI Story Maker automates niche discovery, content creation, and market optimization for Amazon KDP with advanced AI and human co-creation.
           </Typography>
         </div>
         <div className="container">
@@ -304,7 +308,7 @@ const Home = () => {
               margin="dense"
               id="atmosphere"
               name="atmosphere"
-              label="atmosphere"
+              label="Atmosphere"
               placeholder="Enter setting and atmosphere (e.g., A medieval kingdom with a mystical aura, surrounded by dense forests and ancient ruins.)"
               fullWidth
               multiline
@@ -319,6 +323,7 @@ const Home = () => {
               id="email"
               name="email"
               label="Email"
+              placeholder="user@example.com"
               fullWidth
               multiline
               variant="standard"
@@ -431,7 +436,7 @@ const Home = () => {
             {status === "pending" ? (
               <CircularProgress size={24} />
             ) : (
-              "Generate Story"
+              "Generate Story Proposal"
             )}
           </Button>
           {status === "resolved" && (
@@ -460,7 +465,7 @@ const Home = () => {
                   style={{ width: 200 }}
                   onClick={handleSave}
                 >
-                  Save
+                  Approve Book Proposal
                 </Button>
                 <Button
                   variant="outlined"
@@ -492,6 +497,7 @@ const Home = () => {
             id="downloadEmail"
             name="downloadEmail"
             label="Email"
+            placeholder="user@example.com"
             fullWidth
             multiline
             variant="standard"
@@ -508,7 +514,7 @@ const Home = () => {
             {status === "pending_download" ? (
               <CircularProgress size={24} />
             ) : (
-              "Download Story"
+              "Download Completed Book"
             )}
           </Button>
         </div>
