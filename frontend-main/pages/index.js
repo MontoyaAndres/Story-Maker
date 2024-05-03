@@ -103,9 +103,11 @@ const Home = () => {
         }
       ).then((res) => res.json());
 
-      if (apiChat && apiChat.result?.content) {
+      if (apiChat && apiChat.result?.content !== "{}") {
         console.log("apiChat:", apiChat);
         setStory(JSON.parse(apiChat.result.content));
+      } else {
+        throw new Error("Error generating story");
       }
 
       setStatus("resolved");
@@ -117,6 +119,8 @@ const Home = () => {
 
   const handleSave = async () => {
     try {
+      setStatus("pending");
+
       if (!values.email) {
         throw new Error("Email is required");
       }
@@ -148,9 +152,11 @@ const Home = () => {
         }
       ).then((res) => res.json());
 
-      if (response?.message) {
+      if (response?.result?.content !== "{}") {
         setEmailSent(true);
         setStatus("resolved");
+      } else {
+        throw new Error("Error saving story");
       }
     } catch (error) {
       console.error(error);
@@ -205,6 +211,20 @@ const Home = () => {
           We'll send the story to your email
         </Alert>
       </Snackbar>
+      <Snackbar
+        open={status === "rejected"}
+        autoHideDuration={6000}
+        onClose={() => setStatus("idle")}
+      >
+        <Alert
+          onClose={() => setStatus("idle")}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          error generating, please try again
+        </Alert>
+      </Snackbar>
       <Dialog
         open={open}
         onClose={() => handleOpenDialog(false)}
@@ -248,7 +268,9 @@ const Home = () => {
             Write Smarter, Publish Faster!
           </Typography>
           <Typography className="description">
-            AI Story Maker automates niche discovery, content creation, and market optimization for Amazon KDP with advanced AI and human co-creation.
+            AI Story Maker automates niche discovery, content creation, and
+            market optimization for Amazon KDP with advanced AI and human
+            co-creation.
           </Typography>
         </div>
         <div className="container">
@@ -281,9 +303,15 @@ const Home = () => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Short (1500 - 3000 words)"}>Short (1500 - 3000 words)</MenuItem>
-                <MenuItem value={"Medium (4000 - 6000 words)"}>Medium (4000 - 6000 words)</MenuItem>
-                <MenuItem value={"Long (7000 - 9000 words)"}>Long (7000 - 9000 words)</MenuItem>
+                <MenuItem value={"Short (1500 - 3000 words)"}>
+                  Short (1500 - 3000 words)
+                </MenuItem>
+                <MenuItem value={"Medium (4000 - 6000 words)"}>
+                  Medium (4000 - 6000 words)
+                </MenuItem>
+                <MenuItem value={"Long (7000 - 9000 words)"}>
+                  Long (7000 - 9000 words)
+                </MenuItem>
               </Select>
             </div>
             <TextField
@@ -302,7 +330,7 @@ const Home = () => {
             />
           </div>
           <div className="two">
-          <TextField
+            <TextField
               autoFocus
               required
               margin="dense"
@@ -362,7 +390,6 @@ const Home = () => {
                 <MenuItem value={"Non-Fiction"}>Non-Fiction</MenuItem>
                 <MenuItem value={"Biography"}>Biography</MenuItem>
                 <MenuItem value={"Self-Help"}>Self-Help</MenuItem>
-
               </Select>
             </div>
             <div className="select">
@@ -383,9 +410,13 @@ const Home = () => {
                 <MenuItem value={"Third Person"}>Third Person</MenuItem>
                 <MenuItem value={"Omniscient"}>Omniscient</MenuItem>
                 <MenuItem value={"Second Person"}>Second Person</MenuItem>
-                <MenuItem value={"Stream of Consciousness"}>Stream of Consciousness</MenuItem>
+                <MenuItem value={"Stream of Consciousness"}>
+                  Stream of Consciousness
+                </MenuItem>
                 <MenuItem value={"Epistolary"}>Epistolary</MenuItem>
-                <MenuItem value={"Multiple Perspectives"}>Multiple Perspectives</MenuItem>
+                <MenuItem value={"Multiple Perspectives"}>
+                  Multiple Perspectives
+                </MenuItem>
                 <MenuItem value={"Interactive"}>Interactive</MenuItem>
                 <MenuItem value={"Observer"}>Observer</MenuItem>
                 <MenuItem value={"Camera Eye"}>Camera Eye</MenuItem>
@@ -439,7 +470,7 @@ const Home = () => {
               "Generate Story Proposal"
             )}
           </Button>
-          {status === "resolved" && (
+          {story && (
             <>
               <Typography variant="body1" style={{ marginTop: 20 }}>
                 {story?.title}
@@ -450,30 +481,41 @@ const Home = () => {
               <Typography variant="body1" style={{ marginTop: 20 }}>
                 {story?.keywords}
               </Typography>
-              {story?.chapters_outline.map((chapter) => (
-                <div key={chapter.chapter_number}>
-                  <Typography variant="body1" style={{ marginTop: 20 }}>
-                    {chapter.chapter_title}:
-                  </Typography>
-                  {chapter.chapter_description}
-                </div>
-              ))}
+              {story?.chapters_outline?.length > 0 &&
+                story?.chapters_outline?.map((chapter) => (
+                  <div key={chapter.chapter_number}>
+                    <Typography variant="body1" style={{ marginTop: 20 }}>
+                      {chapter.chapter_title}:
+                    </Typography>
+                    {chapter.chapter_description}
+                  </div>
+                ))}
               <div className="buttons">
                 <Button
                   variant="contained"
                   color="primary"
                   style={{ width: 200 }}
                   onClick={handleSave}
+                  disabled={status === "pending"}
                 >
-                  Approve Book Proposal
+                  {status === "pending" ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    "Approve Book Proposal"
+                  )}
                 </Button>
                 <Button
                   variant="outlined"
                   color="primary"
                   style={{ width: 200 }}
                   onClick={handleGenerate}
+                  disabled={status === "pending"}
                 >
-                  Re-generate
+                  {status === "pending" ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    "Re-generate"
+                  )}
                 </Button>
               </div>
             </>
